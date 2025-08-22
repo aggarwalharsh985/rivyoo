@@ -16,6 +16,14 @@ const Post = ({ post }: { post: IPostDocument }) => {
     const fullName = post?.user?.firstName + " " + post?.user?.lastName;
     const loggedInUser = user?.id === post?.user?.userId;
 
+    const handleDelete = async () => {
+        try {
+            await deletePostAction(post._id as string);
+        } catch (error) {
+            console.error('Error deleting post:', error);
+        }
+    };
+
     return (
         <div className='bg-white my-2 mx-2 md:mx-0 rounded-lg border border-gray-300'>
             <div className=' flex gap-2 p-4'>
@@ -33,9 +41,7 @@ const Post = ({ post }: { post: IPostDocument }) => {
                 <div>
                     {
                         loggedInUser && (
-                            <Button onClick={() => {
-                                const res = deletePostAction(post._id as string);
-                            }} size={'icon'} className='rounded-full' variant={'outline'}>
+                            <Button onClick={handleDelete} size={'icon'} className='rounded-full' variant={'outline'}>
                                 <Trash2 />
                             </Button>
                         )

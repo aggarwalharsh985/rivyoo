@@ -1,9 +1,8 @@
-import Image from 'next/image'
 import React from 'react'
-import ProfilePhoto from './shared/ProfilePhoto'
 import { getAllPosts } from '@/lib/serveractions'
+import { User } from '@clerk/nextjs/server'
 
-const Sidebar = async ({ user }: { user: any }) => {
+const Sidebar = async ({ user }: { user: User | null }) => {
 
     const posts = await getAllPosts();
     return (

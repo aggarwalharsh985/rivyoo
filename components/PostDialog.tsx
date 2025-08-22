@@ -15,12 +15,16 @@ import Image from "next/image"
 import { createPostAction } from "@/lib/serveractions"
 import { toast } from "sonner"
 
-export function PostDialog({ setOpen, open, src }: { setOpen: any, open: boolean, src: string }) {
+export function PostDialog({ setOpen, open, src }: { 
+    setOpen: (open: boolean) => void, 
+    open: boolean, 
+    src: string 
+}) {
     const inputRef = useRef<HTMLInputElement>(null);
     const [selectedFile, setSelectedFile] = useState<string>("");
     const [inputText, setInputText] = useState<string>("");
 
-    const changeHandler = (e: any) => {
+    const changeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setInputText(e.target.value);
     }
 
@@ -31,11 +35,12 @@ export function PostDialog({ setOpen, open, src }: { setOpen: any, open: boolean
             setSelectedFile(dataUrl);
         }
     }
+    
     const postActionHandler = async (formData: FormData) => {
         const inputText = formData.get('inputText') as string;
         try {
             await createPostAction(inputText, selectedFile);
-        } catch (error) {
+        } catch (error: unknown) {
             console.log('error occurred', error);
         }
         setInputText("");

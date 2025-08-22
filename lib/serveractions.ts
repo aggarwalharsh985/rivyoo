@@ -19,7 +19,7 @@ cloudinary.config({
 export const createPostAction = async (inputText: string, selectedFile: string) => {
     await connectDB();
     const user = await currentUser();
-    if (!user) throw new Error('User not athenticated');
+    if (!user) throw new Error('User not authenticated');
     if (!inputText) throw new Error('Input field is required');
 
     const image = selectedFile;
@@ -58,7 +58,13 @@ export const createPostAction = async (inputText: string, selectedFile: string) 
 export const getAllPosts = async () => {
     try {
         await connectDB();
-        const posts = await Post.find().sort({ createdAt: -1 }).populate({ path: 'comments', options: { sort: { createdAt: -1 } } });
+        const posts = await Post.find()
+            .sort({ createdAt: -1 })
+            .populate({
+                path: 'comments',
+                model: 'Comment',
+                options: { sort: { createdAt: -1 } }
+            });
         if(!posts) return [];
         return JSON.parse(JSON.stringify(posts));
     } catch (error: unknown) {
@@ -88,8 +94,10 @@ export const deletePostAction = async (postId: string) => {
     }
 }
 
+// create comment action
 export const createCommentAction = async (postId: string, formData: FormData) => {
     try {
+        await connectDB();
         const user = await currentUser();
         if (!user) throw new Error("User not authenticated");
         const inputText = formData.get('inputText') as string;

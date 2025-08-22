@@ -1,6 +1,7 @@
-import { Bell, BriefcaseBusiness, Home, MessageCircleMore, Users } from 'lucide-react'
+import { Bell, Home } from 'lucide-react'
 import Link from 'next/link';
 import React, { JSX } from 'react';
+
 // method-1 to create type
 // type NAVITEMS = {
 //     src:string,
