@@ -24,7 +24,6 @@ export const createPostAction = async (inputText: string, selectedFile: string) 
 
     const image = selectedFile;
 
-
     const userDatabase: IUser = {
         firstName: user.firstName || "Patel",
         lastName: user.lastName || "Mern Stack",
@@ -49,10 +48,12 @@ export const createPostAction = async (inputText: string, selectedFile: string) 
             })
         }
         revalidatePath("/");
-    } catch (error: any) {
-        throw new Error(error);
+    } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+        throw new Error(errorMessage);
     }
 }
+
 // get all post using server actions
 export const getAllPosts = async () => {
     try {
@@ -60,8 +61,9 @@ export const getAllPosts = async () => {
         const posts = await Post.find().sort({ createdAt: -1 }).populate({ path: 'comments', options: { sort: { createdAt: -1 } } });
         if(!posts) return [];
         return JSON.parse(JSON.stringify(posts));
-    } catch (error) {
-        console.log(error);
+    } catch (error: unknown) {
+        console.log('Error fetching posts:', error);
+        return [];
     }
 }
 
@@ -80,8 +82,9 @@ export const deletePostAction = async (postId: string) => {
     try {
         await Post.deleteOne({ _id: postId });
         revalidatePath("/");
-    } catch (error: any) {
-        throw new Error('An error occurred', error);
+    } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+        throw new Error(`An error occurred: ${errorMessage}`);
     }
 }
 
@@ -111,7 +114,8 @@ export const createCommentAction = async (postId: string, formData: FormData) =>
         await post.save();
 
         revalidatePath("/");
-    } catch (error) {
+    } catch (error: unknown) {
+        console.error('Error creating comment:', error);
         throw new Error('An error occurred')
     }
 }
