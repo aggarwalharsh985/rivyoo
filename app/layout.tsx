@@ -16,7 +16,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning={true}>
       <body className={`${inter.className} min-h-screen flex flex-col`}>
         <ClerkProvider>
           <Navbar />
