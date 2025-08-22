@@ -9,18 +9,25 @@ import { createCommentAction } from '@/lib/serveractions'
 
 const CommentInput = ({ postId }: { postId: string }) => {
     const { user } = useUser();
-    const commentActionHandler = async (formData:FormData) => {
+    
+    const commentActionHandler = async (formData: FormData) => {
         try {
             if(!user) throw new Error('User not authenticated');
             await createCommentAction(postId, formData);
         } catch (error) {
-            throw new Error('An error occured');
+            throw new Error('An error occurred');
         }
     }
+
+    // Don't render if no user
+    if (!user) {
+        return null;
+    }
+
     return (
-        <form action={(formData)=> commentActionHandler(formData)}>
+        <form action={(formData) => commentActionHandler(formData)}>
             <div className='flex items-center gap-2'>
-                {user?.imageUrl && <ProfilePhoto src={user.imageUrl} />}
+                <ProfilePhoto src={user.imageUrl || '/default-avatar.png'} />
                 <Input
                     type="text"
                     name="inputText"
