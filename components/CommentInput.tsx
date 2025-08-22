@@ -14,7 +14,8 @@ const CommentInput = ({ postId }: { postId: string }) => {
         try {
             if(!user) throw new Error('User not authenticated');
             await createCommentAction(postId, formData);
-        } catch (error) {
+        } catch (error: unknown) {
+            console.error('Error creating comment:', error);
             throw new Error('An error occurred');
         }
     }
